@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.Arrays;
 
 /**
+ * 多线程并发情况下，states数组可能会被其他线程进行修改，导致数组的状态变更
  * @author ligy
  * @date 2018/4/7 0007 11:49
  */
