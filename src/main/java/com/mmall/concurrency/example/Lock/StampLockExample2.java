@@ -6,17 +6,14 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.StampedLock;
 
 /**
- * 公平锁：先等待先出列
- * 不公平锁：插队运行
  * @author ligy
- * @date 2018/4/12 0012 23:41
+ * @date 2018/4/13 0013 22:20
  */
 @Slf4j
-public class ReentrantLockExample1 {
+public class StampLockExample2 {
     //请求总数
     private static int clientTotal = 5000;
     //并发执行线程数
@@ -24,7 +21,7 @@ public class ReentrantLockExample1 {
     //计数器
     private static int count = 0;
 
-    private static Lock lock = new ReentrantLock();
+    private final static StampedLock stampedLock = new StampedLock();
 
     public static void main(String[] args) throws InterruptedException {
         ExecutorService executorService = Executors.newCachedThreadPool();
@@ -48,11 +45,11 @@ public class ReentrantLockExample1 {
     }
     //对操作方法进行lock
     private static void add(){
-        lock.lock();
+        long stamp = stampedLock.writeLock();
         try{
             count++;
         }finally {
-            lock.unlock();
+            stampedLock.unlock(stamp);
         }
     }
 }
